@@ -10,14 +10,13 @@ import (
 var functions = template.FuncMap{}
 
 func RenderTemplate(w http.ResponseWriter, tmpl string) {
-
 	_, err := RenderTemplateTest(w)
 	if err != nil {
 		fmt.Println("Error getting template cache:", err)
 	}
 
 	parsedTemple, _ := template.ParseFiles("./templates/" + tmpl)
-	err := parsedTemple.Execute(w, nil)
+	err = parsedTemple.Execute(w, nil)
 	if err != nil {
 		fmt.Println("Error parsing template:", err)
 		return
@@ -25,7 +24,7 @@ func RenderTemplate(w http.ResponseWriter, tmpl string) {
 
 }
 
-func RenderTemplateTest(w http.ResponseWriter, tmpl string) (map[string]*template.Template, error) {
+func RenderTemplateTest(w http.ResponseWriter) (map[string]*template.Template, error) {
 	myCache := map[string]*template.Template{}
 
 	pages, err := filepath.Glob("./template/*.page.tmpl")
@@ -35,13 +34,13 @@ func RenderTemplateTest(w http.ResponseWriter, tmpl string) (map[string]*templat
 
 	for _, page := range pages {
 		name := filepath.Base(page)
-		fmt.Println()
+		fmt.Println("Page is currently,", page)
 		ts, err := template.New(name).Funcs(functions).ParseFiles(page)
 		if err != nil {
 			return myCache, err
 		}
 
-		matches, err := filepath.Glob("./*.layout.tmpl")
+		matches, err := filepath.Glob("./templates/*.layout.tmpl")
 
 		if err != nil {
 			return myCache, err
